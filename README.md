@@ -9,10 +9,17 @@ Script for sending whatsapp via selenium 🇺🇦
 #### Installation
 1. Contact import to whatsapp 
 - Remove icloud contacts from phone (in order to keep personal data safe)
+![iOS Settings](docs/ios_remove_icloud_contacts_from_contact_app.png "Hide iCloud contacts from whatsapp")
+
 - Verify that no personal contacts available in phone
 - Import `list_all_for_import.csv` to google contacts as csv. (it may take a while)
+![CSV to google](docs/import_csv_to_google.png "Import CSV to Google account")
 - Then add google account to iPhone contacts
+![Add Google 1](docs/add_google_1.PNG)
+![Add Google 2](docs/add_google_2.PNG)
+![Add Google 3](docs/add_google_3.PNG)
 - Verify that no personal contacts available in phone
+ ![Verify contacts imported](docs/verify_contacts_synced.jpeg)
 - Login to whatsapp and sync contacts (it may take a while)
 
 2. Clone repo to local
