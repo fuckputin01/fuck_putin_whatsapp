@@ -10,6 +10,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 import time
+from datetime import datetime
 
 text = """Остановите Путина! Выходите на протест! Сохраните себя, страну и свою армию!
 Cейчас ваши солдаты убивают мирное население в Украине. Целая нация вас возненавидит во веки.
@@ -23,6 +24,8 @@ https://200rf.com/
 Украина будет способствовать надлежащей передаче тел.
 Они не могут быть просто сожжены и забыты.
 Это не нормально.
+
+{time}
 """
 
 options = webdriver.ChromeOptions()
@@ -49,7 +52,9 @@ with open('list.csv', 'r') as phones:
         print(f'Sending message to {phone}.')
         should_continue = False
         try:
-            url = f"https://web.whatsapp.com/send?phone={phone}&text={urllib.parse.quote_plus(text)}"
+            now = datetime.now()
+            current_time = now.strftime("%H:%M:%S")
+            url = f"https://web.whatsapp.com/send?phone={phone}&text={urllib.parse.quote_plus(text.format(time=current_time))}"
             driver.get(url)
             sent = False
             for j in range(1,5):
