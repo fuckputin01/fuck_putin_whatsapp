@@ -46,7 +46,7 @@ with open('list.csv', 'r') as phones:
                         click_btn = WebDriverWait(driver, 5*j).until(
                             EC.element_to_be_clickable((By.CLASS_NAME, '_4sWnG')))
                     except Exception as e:
-                        if 'неправильний' in driver.page_source:
+                        if 'неправильний' in driver.page_source or 'url is invalid' in driver.page_source:
                             should_continue = True
                             print(f"{phone} doesn't exist")
                             break
