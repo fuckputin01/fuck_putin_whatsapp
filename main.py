@@ -11,7 +11,19 @@ from selenium.webdriver.support import expected_conditions as EC
 
 import time
 
-text = "Остановите Путина! Выходите на протест! Сохраните себя, страну и свою армию!"
+text = """Остановите Путина! Выходите на протест! Сохраните себя, страну и свою армию!
+Cейчас ваши солдаты убивают мирное население в Украине. Целая нация вас возненавидит во веки.
+Не бойтесь распространять правду. Россияне имеют право знать об этом.
+Телеграмм группы с пленными рф:
+https://web.telegram.org/z/#-1715850491
+https://web.telegram.org/z/#-1763333546
+https://t.me/umer_RF
+https://t.me/demiz_ros_materei
+https://200rf.com/
+Украина будет способствовать надлежащей передаче тел.
+Они не могут быть просто сожжены и забыты.
+Это не нормально.
+"""
 
 options = webdriver.ChromeOptions()
 options.add_argument('--user-data-dir=./User_Data')
