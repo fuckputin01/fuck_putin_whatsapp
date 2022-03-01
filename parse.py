@@ -15,5 +15,19 @@ def parse():
             for p in ls:
                 w.write(f'+7-{p}\n')
 
+def parse_officers():
+    with open('officers.txt', 'r') as f:
+        with open('list_officers.csv', 'w') as w:
+            w.write('Primary Phone\n')
+            while 1:
+                try:
+                    q = f.readline()
+                    if q:
+                        w.write('7'+q[1:])
+                    else:
+                        break
+                except:
+                    break
+
 if __name__ == '__main__':
-    parse()
+    parse_officers()
