@@ -1,3 +1,4 @@
+import sys
 import time
 import urllib.parse
 from datetime import datetime
@@ -11,8 +12,15 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 from utils import update_phone_timestamp, get_phone_numbers, get_texts
 
+CHROME_USER_DATA_ID=0
+if len(sys.argv) == 2:
+    try:
+        CHROME_USER_DATA_ID=int(sys.argv[1])
+    except:
+        pass
+
 options = webdriver.ChromeOptions()
-options.add_argument('--user-data-dir=./User_Data')
+options.add_argument(f'--user-data-dir=./User_Data{CHROME_USER_DATA_ID}')
 
 driver = webdriver.Chrome(ChromeDriverManager().install(), chrome_options=options)
 print('Once your browser opens up sign in to web whatsapp')
@@ -64,7 +72,7 @@ while GO_SENDING:
                         time.sleep(0.7)
                         click_btn.click()
                         sent = True
-                        time.sleep(1.5)
+                        time.sleep(3.0)
                         print(f'[{current_time}] {counter} Message sent to:', phone)
                         break
         except Exception as e:
