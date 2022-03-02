@@ -26,9 +26,13 @@ GO_SENDING = True
 while GO_SENDING:
     phones_list_from_api = get_phone_numbers()
     for record in phones_list_from_api:
+        current_time = datetime.now().strftime("%H:%M:%S")
+        if 'To use WhatsApp on your computer:' in driver.page_source:
+            print(f'[{current_time}] {counter} PHONE NUMBER IS BLOCKED BY WHATSAPP')
+            driver.quit()
+            exit(3)
         counter += 1
 
-        current_time = datetime.now().strftime("%H:%M:%S")
         try:
             phone = int(record.get('phone_int'))
         except:
