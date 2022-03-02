@@ -1,26 +1,15 @@
-from selenium import webdriver
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support.ui import Select
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
-import urllib.parse
-from selenium.webdriver.support import expected_conditions as EC
-
-
 import time
+import urllib.parse
 from datetime import datetime
+from random import choice
 
-text = """Российская экономика стремительно разваливается.
-Но это не ваша война. Не ваша земля. В Украине вас никто не ждет. Гражданское население ложится под танки, чтобы прекратить вашу оккупацию.
-https://www.youtube.com/watch?v=J_IWfSh1GPM
-Спаси Россию, верни русских солдат домой!
-Спаси своих родных! Не дай им умереть на чужой земле.
-Ищи https://t.me/rf200_now/ и 200rf.com. 
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+from webdriver_manager.chrome import ChromeDriverManager
 
-{time}
-"""
+from utils import update_phone_timestamp, get_phone_numbers, get_texts
 
 options = webdriver.ChromeOptions()
 options.add_argument('--user-data-dir=./User_Data')
@@ -28,58 +17,60 @@ options.add_argument('--user-data-dir=./User_Data')
 driver = webdriver.Chrome(ChromeDriverManager().install(), chrome_options=options)
 print('Once your browser opens up sign in to web whatsapp')
 driver.get('https://web.whatsapp.com')
-input("Press ENTER after login into Whatsapp Web and your chats are visiable	.")
+input("Press ENTER after login into Whatsapp Web and your chats are visible.")
 
-verified_phones = open('verified.csv', 'a')
-# verified_phones.write('Primary Phone\n')
 delay = 30
 
-with open('list.csv', 'r') as phones:
-    phones.readline() # HEADER
-    while 1:
-        try:
-            unparsed_phone = phones.readline()
-            phone = ''.join(p for p in unparsed_phone if p.isnumeric())
-        except:
-            break
+counter = 0
+GO_SENDING = True
+while GO_SENDING:
+    phones_list_from_api = get_phone_numbers()
+    for record in phones_list_from_api:
+        counter += 1
 
-        print(f'Sending message to {phone}.')
+        current_time = datetime.now().strftime("%H:%M:%S")
+        try:
+            phone = int(record.get('phone_int'))
+        except:
+            continue
+
+        name = record.get('name')
+
+        print(f'[{current_time}] {counter} Sending message to {phone}.')
         should_continue = False
         try:
-            now = datetime.now()
-            current_time = now.strftime("%H:%M:%S")
+            text = choice(get_texts()).format(time=current_time, name=name).strip()
             url = f"https://web.whatsapp.com/send?phone={phone}&text={urllib.parse.quote_plus(text.format(time=current_time))}"
             driver.get(url)
             sent = False
             for j in range(1,5):
                 if not sent:
                     try:
-                        click_btn = WebDriverWait(driver, 5*j).until(
+                        click_btn = WebDriverWait(driver, j).until(
                             EC.element_to_be_clickable((By.CLASS_NAME, '_4sWnG')))
                     except Exception as e:
+                        update_phone_timestamp(phone_int=phone)
                         if 'неправильний' in driver.page_source or 'url is invalid' in driver.page_source:
                             should_continue = True
-                            print(f"{phone} doesn't exist")
+                            print(f"[{current_time}] {counter} {phone} doesn't exist")
                             break
                         else:
-                            print(f"Something went wrong..\n Failed to send message to: {phone}, retry ({j})")
+                            print(f"    Something went wrong..\n    Failed to send message to: {phone}, retry ({j})")
                     else:
-                        time.sleep(1)
+                        time.sleep(0.7)
                         click_btn.click()
                         sent = True
-                        time.sleep(3)
-                        print('Message sent to: ' + phone)
+                        time.sleep(1.5)
+                        print(f'[{current_time}] {counter} Message sent to:', phone)
                         break
         except Exception as e:
-            print('Failed to send message to ' + phone + str(e))
+            print(f'[{current_time}] {counter} Failed to send message to:', phone, str(e))
+            update_phone_timestamp(phone_int=phone)
             time.sleep(0.5)
 
         if should_continue:
             continue
 
-        print(unparsed_phone)
-        verified_phones.write(f'{unparsed_phone}')
-
-verified_phones.close()
+        update_phone_timestamp(phone_int=phone)
 
 driver.quit()

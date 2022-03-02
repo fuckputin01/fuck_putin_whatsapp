@@ -2,7 +2,7 @@
 Script for sending whatsapp via selenium 🇺🇦
 
 #### Prerequirements
-- Whatsapp account (can bye lifecell esim)
+- Whatsapp account (can buy lifecell esim)
 - Python3
 - Venv
 
@@ -20,28 +20,32 @@ source /virtual/environment/bin/activate
 pip install -r requirements.txt
 ```
 
-3  (optional) Update text in `main.py`
+3  (optional) Update text in `utils.py`
 ```
-text = "Остановите Путина! Выходите на протест! Сохраните себя, страну и свою армию!"
+get_texts()
 ```
 
 3.5 ATTENTION: in case of wrong phone number, there is a popup in whatsapp.
-If whatsapp language is not Ukrainian need to change `main.py`:
+If whatsapp language is not Ukrainian or English need to change `main.py`:
 ```
-if 'неправильний' in driver.page_source:
+if 'неправильний' in driver.page_source or 'url is invalid' in driver.page_source:
 ```
 change `неправильний` to whatever available at phone not available popup.
-4. run `main.py`
+
+4. !!! CRITICAL:
+Ask for `config.txt` file where you got this project and put to the folder.
+
+5. run `main.py`
 ```
 python main.py
 ```
 
-5. After login using QR in Google Chrome, press enter in terminal
+6. After login using QR in Google Chrome, press enter in terminal
 
-6. Enjoy
+7. Enjoy
 
 ### TODO
-1. Add centralized DB for phones
+~~1. Add centralized DB for phones Done~~
 2. Add more details to this README
 3. Clean up the repo
 4. Win the war and fuck off putin. 🇺🇦
